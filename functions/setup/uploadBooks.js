@@ -8,7 +8,7 @@ uuid = require("uuid"),
 documentClient = new AWS.DynamoDB.DocumentClient(),
 s3Client = new AWS.S3;
 
-// UploadBooks - Upload sample set of books to DynamoDB
+
 exports.handler = function(event, context, callback) {
   console.log("Received event:", JSON.stringify(event, null, 2));
   
@@ -43,7 +43,7 @@ function uploadBooksData(book_items) {
     items_array.push(item);
   }
 
-  // Batch items into arrays of 25 for BatchWriteItem limit
+  
   var split_arrays = [], size = 25;
     while (items_array.length > 0) {
         split_arrays.push(items_array.splice(0, size));
@@ -54,18 +54,18 @@ function uploadBooksData(book_items) {
   });
 }
 
-// Retrieve sample books from aws-bookstore-demo S3 Bucket
+
 function getBooksData() {
   var params = {
-    Bucket: process.env.S3_BUCKET, // aws-bookstore-demo
-    Key: process.env.FILE_NAME // data/books.json
+    Bucket: process.env.S3_BUCKET, 
+    Key: process.env.FILE_NAME 
  };
  return s3Client.getObject(params).promise();
 }
 
-// Batch write books to DynamoDB
+
 function putItem(items_array) {
-  var tableName = process.env.TABLE_NAME; // [ProjectName]-Books
+  var tableName = process.env.TABLE_NAME; 
   var params = {
     RequestItems: { 
       [tableName]: items_array
@@ -79,7 +79,7 @@ function putItem(items_array) {
   });
 }
 
-// Send response back to CloudFormation template runner
+
 function sendResponse(event, callback, logStreamName, responseStatus, responseData) {
   const responseBody = JSON.stringify({
     Status: responseStatus,
