@@ -33,7 +33,7 @@ class FriendRecommendations extends React.Component<FriendRecommendationsProps, 
   }
 
   render() {
-    // No recommendations to show
+    
     if (!(this.state.friends[0] && this.state.friends[0].friendsPurchased && this.state.friends[0].friendsPurchased.length > 0)) {
       return <div className="no-friends-padding" />
     }
