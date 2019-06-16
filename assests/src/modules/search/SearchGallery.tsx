@@ -27,7 +27,7 @@ export class SearchGallery extends React.Component<SearchGalleryProps, SearchGal
     try {
       const searchResults = await this.searchBooks();
 
-      // Map the search results to a book object
+      
       const books = [];
       for (var i = 0; i < searchResults.hits.total; i++) {
         var hit = searchResults.hits.hits[i] && searchResults.hits.hits[i]._source;
