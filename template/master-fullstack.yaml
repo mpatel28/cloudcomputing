@@ -488,30 +488,15 @@ Parameters:
     Description: Name of assets S3 bucket to create (lowercase, numbers or - only, S3 Buckets are globally unique)
     AllowedPattern: "^[a-z0-9-]{3,53}$"
     ConstraintDescription: Must be between 3 and 53 characters (lowercase, numbers or -)
-  SeedRepository:
-    Type: String
-    Default: 'https://s3.amazonaws.com/aws-bookstore-demo/bookstore-webapp.zip'
 
 Conditions:
   IADRegion: !Equals [!Ref "AWS::Region", "us-east-1"]
 Mappings:
   S3Buckets:
     us-east-1:
-      Bucket: aws-bookstore-demo
+      Bucket: E-Commerce
       NeptuneDataBucket: bookstore-neptune
-      SeederFunctionBucket: fsd-aws-wildrydes-us-east-1
-    us-west-2:
-      Bucket: aws-bookstore-demo-us-west-2
-      NeptuneDataBucket: bookstore-neptune-us-west-2
-      SeederFunctionBucket: fsd-aws-wildrydes-us-west-2
-    eu-central-1:
-      Bucket: aws-bookstore-demo-eu-central-1
-      NeptuneDataBucket: bookstore-neptune-eu-central-1
-      SeederFunctionBucket: fsd-aws-wildrydes-eu-central-1
-    eu-west-1:
-      Bucket: aws-bookstore-demo-eu-west-1
-      NeptuneDataBucket: bookstore-neptune-eu-west-1
-      SeederFunctionBucket: fsd-aws-wildrydes-eu-west-1
+    
   Constants:
     S3Keys:
       ListOrdersCode: functions/ListOrders.zip
@@ -538,7 +523,6 @@ Mappings:
       UpdateConfigCode: functions/UpdateConfig.zip
       SeederFunctionCode: aws-serverless-codecommit-seeder.zip
 Resources:
-# ---------- VPC - SUBNET - SECURITY GROUPS  ---------
 
   bookstoreVPC:
     Type: "AWS::EC2::VPC"
@@ -608,7 +592,7 @@ Resources:
   bookstoreNeptuneSecurityGroup:
     Type: "AWS::EC2::SecurityGroup"
     Properties:
-      GroupDescription: "Security group for Neptune DB within book store app."
+      GroupDescription: "Security group for Neptune DB within E-Commerce store app."
       SecurityGroupIngress:
         -
           CidrIp: "0.0.0.0/0"
@@ -621,7 +605,7 @@ Resources:
   bookstoreNeptuneSubnetGroup:
     Type: "AWS::Neptune::DBSubnetGroup"
     Properties:
-      DBSubnetGroupDescription: "Subnet group for Neptune DB within book store app."
+      DBSubnetGroupDescription: "Subnet group for Neptune DB within E-Commerce store app."
       SubnetIds:
         - !Ref bookstoreSubnet1
         - !Ref bookstoreSubnet2
@@ -653,7 +637,7 @@ Resources:
       SubnetIds:
         - Ref: bookstoreSubnet1        
   
-  # ---------- NEPTUNE CLUSTER DEFINITION ---------
+ 
 
   bookstoreNeptuneCluster:
     Type: "AWS::Neptune::DBCluster"
@@ -668,7 +652,7 @@ Resources:
       DBClusterIdentifier: !Ref bookstoreNeptuneCluster
       DBInstanceClass: "db.r4.large"
 
-# ---------- IAM ROLE ATTACH FOR S3 BULK LOAD ------------
+
 
   bookstoreNeptuneLoaderS3ReadPolicy:
     Type: AWS::IAM::Policy
@@ -697,7 +681,7 @@ Resources:
         Version: '2012-10-17'
       Path: /
 
-  # ---------- CUSTOM CLOUDFORMATION RESOURCE FOR ATTACHING S3 READ ROLE TO NEPTUNE CLUSTER ---------
+ 
 
   bookstoreNeptuneIAMAttach:
     DependsOn: 
@@ -816,9 +800,6 @@ Resources:
       Runtime: python3.6
       Timeout: 30
 
-
-# ---------- VPC ENDPOINT FOR NEPTUNE BULK LOADER ACCESS TO S3 ---------
-
   S3Endpoint:
     Type: AWS::EC2::VPCEndpoint
     Properties:
@@ -838,7 +819,7 @@ Resources:
       ServiceName: !Join [ "" , [ "com.amazonaws.", !Ref "AWS::Region", ".s3"]]
       VpcId: !Ref bookstoreVPC
 
-# ---------- CUSTOM RESOURCE TO INITIATE NEPTUNE BULK LOAD PROCESS ---------
+
   bookstoreNeptuneLoader: 
     DependsOn:
       - bookstoreNeptuneLoaderLambdaRoleCloudWatchStream
@@ -958,7 +939,7 @@ Resources:
         Version: '2012-10-17'
       Path: /
 
-# ---------- ROLES FOR DYNAMODB ---------
+
   DynamoDbRole:
     Type: 'AWS::IAM::Role'
     Properties:
@@ -1010,7 +991,7 @@ Resources:
       'AWS::CloudFormation::Designer':
         id: 07b29683-0ea5-44bf-a439-fcb89713fd09
 
-# ---------- ROLES FOR NEPTUNE ---------        
+     
   RecommendationsLambdaRole:
     Type: 'AWS::IAM::Role'
     Properties:
@@ -1039,7 +1020,7 @@ Resources:
                 Resource: '*'
             Version: 2012-10-17
 
-# ---------- DYNAMODB TABLES DEFINITIONS ---------
+
   TBooks:
     Type: 'AWS::DynamoDB::Table'
     Properties:
@@ -1112,7 +1093,7 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Designer':
         id: e1a45038-ec76-464d-91b5-6b31bc325fa7
-# ---------- ELASTICSEARCH ROLES DEFINITIONS ---------        
+      
   ESSearchRole:
     Type: 'AWS::IAM::Role'
     Properties:
@@ -1218,7 +1199,7 @@ Resources:
       AdvancedOptions:
         rest.action.multi.allow_explicit_index: true
 
-# ---------- ROLES FOR ELASTICACHE ---------  
+
   RedisRole:
     Type: 'AWS::IAM::Role'
     Properties:
@@ -1238,7 +1219,7 @@ Resources:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole'
         - 'arn:aws:iam::aws:policy/AWSLambdaInvocation-DynamoDB'
 
-# ---------- ELASTICACHE DEFINITIONS ---------         
+  
   ElastiCacheCluster:
     DependsOn: 
      - bookstoreCacheSubnets
@@ -1255,7 +1236,7 @@ Resources:
           - bookstoreCacheSecurityGroup
           - 'GroupId'
         
-# ---------- LAMBDA STREAMING FUNCTIONS ---------      
+
   UpdateSearchCluster:
     Type: 'AWS::Lambda::Function'
     DependsOn:
@@ -1326,7 +1307,7 @@ Resources:
             - ElastiCacheCluster
             - RedisEndpoint.Address 
 
- # ----------  STREAMING TRIGGERS ---------                     
+                     
   DataTableStream:
     DependsOn: TBooks
     Type: 'AWS::Lambda::EventSourceMapping'
@@ -1354,7 +1335,7 @@ Resources:
         - Arn
       StartingPosition: TRIM_HORIZON   
 
-# ---------- LAMBDA for DYNAMODB FUNCTIONS ---------         
+    
   FunctionListOrders:
     Type: 'AWS::Lambda::Function'
     Properties:
@@ -1635,7 +1616,6 @@ Resources:
       'AWS::CloudFormation::Designer':
         id: 9c3f4191-a370-4344-a5b1-626228919c47
 
-# ---------- LAMBDA FUNCTIONS for NEPTUNE ---------  
 
   FunctionGetRecommendations:
     Type: 'AWS::Lambda::Function'
@@ -1701,7 +1681,7 @@ Resources:
           - Ref: bookstoreSubnet1
           - Ref: bookstoreSubnet2
         
-# ---------- LAMBDA FUNCTIONS for ELASTICSEARCH and ELASTICACHE  ---------          
+      
   FunctionSearch:
     Type: 'AWS::Lambda::Function'
     DependsOn:
