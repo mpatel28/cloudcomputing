@@ -27,7 +27,7 @@ export default class BestSellers extends React.Component<BestSellersProps, BestS
       const books = [];
       const bestSellers = await API.get("bestsellers", "/bestsellers", null);
       
-      // Map the elasticache results to a book object
+      
       for (var i = 0; i < bestSellers.length; i++) {
         var hit = JSON.parse(bestSellers[i]);
         books.push({ bookId: hit });
