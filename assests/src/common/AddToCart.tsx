@@ -40,7 +40,7 @@ class AddToCart extends React.Component<AddToCartProps, AddToCartState> {
       }));
     }
 
-    // if the book does not exist in the cart, add it
+    
     else {
       API.post("cart", "/cart", {
         body: {
