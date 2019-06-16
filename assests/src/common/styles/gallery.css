@@ -134,8 +134,8 @@ a:hover {
 }
 
 .loader {
-    border: 2px solid #f3f3f3; /* Light grey */
-    border-top: 2px solid #F69827; /* orange */
+    border: 2px solid #f3f3f3; 
+    border-top: 2px solid #F69827; 
     border-radius: 50%;
     width: 20px;
     height: 20px;
@@ -147,8 +147,8 @@ a:hover {
 }
 
 .loader-no-margin {
-    border: 2px solid #f3f3f3; /* Light grey */
-    border-top: 2px solid #F69827; /* orange */
+    border: 2px solid #f3f3f3; 
+    border-top: 2px solid #F69827; 
     border-radius: 50%;
     width: 20px;
     height: 20px;
