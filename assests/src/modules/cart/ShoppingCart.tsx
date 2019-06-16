@@ -11,7 +11,7 @@ interface ShoppingCartProps {}
 
 interface ShoppingCartState {
   isLoading: boolean;
-  orders: any[]; // FIXME
+  orders: any[]; 
   orderTotal: number | undefined;
   toCheckout: boolean;
 }
