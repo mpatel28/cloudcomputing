@@ -8,7 +8,7 @@ interface FriendsBoughtProps {
 
 interface FriendsBoughtState {
   isLoading: boolean;
-  recommendations: any[]; // FIXME
+  recommendations: any[]; 
 }
 
 export class FriendsBought extends React.Component<FriendsBoughtProps, FriendsBoughtState> {
